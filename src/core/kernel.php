@@ -3,8 +3,55 @@ namespace core;
 
 class kernel 
 {
+    
+    /** 
+    * Comentário de cabeçalho de arquivos 
+    * Esta classe é a principal, reponsavel por cria uma aplicação groute.
+    * 
+    * @author HIM&ROBOT <him&robot@gmail.com> 
+    * @version 0.1 * @copyright GPL © 2018, HIM&ROBOT ltda. 
+    * @access public * @package groot/main 
+    */ 
+
+
     static private $routes = array();
     
+    public function run()
+    {
+        $browserUrl = $this->getBrowserUrl();  
+        $requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
+        $route = $this->findRouteByUrl($requestMethod, $browserUrl);
+    }
+    
+    private function findRouteByUrl(string $routeMethod, array $browserUrl)
+    {
+        $routes = self::$routes[$routeMethod];
+        foreach($routes as $key => $route) {
+            if($route->compareRoutes($browserUrl)){
+                echo 'achou';
+            }
+        }
+    }
+    
+    private function getBrowserUrl()
+    {
+        if(isset($_GET['url'])) {
+            $urlBrute = '/' . $_GET['url'];
+        } else {
+            $urlBrute = '/';
+        }
+        $browserUrl = $this->tratamentBruteBrowserUrl($urlBrute);
+        return $browserUrl;
+    }
+    private function tratamentBruteBrowserUrl(string $bruteBrowserUrl)
+    {
+        if((strlen($bruteBrowserUrl) > 1) and (substr($bruteBrowserUrl,-1) == '/')){
+            $bruteBrowserUrl = substr($bruteBrowserUrl,0,-1);
+        }
+        $browserUrl = explode('/',$bruteBrowserUrl);
+        return $browserUrl;
+    }
+        
     public function __call($name, $arguments)
     {
         if($name == "get" or $name == "post" or $name == "put" or $name == "delete") {
@@ -20,9 +67,6 @@ class kernel
         $tratamentRoute = $this->tratamentBruteRoute($bruteRoute);
         $route = new route($tratamentRoute['route'], $tratamentRoute['params'], $tratamentRoute['paramsPropeties']);
         self::$routes[$type][] = $route;
-        echo '</br>.........................</br>';
-        print_r(self::$routes);
-        
     }
     
     private function tratamentBruteRoute(string $bruteRoute)
