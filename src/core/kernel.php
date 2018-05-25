@@ -9,8 +9,10 @@ class kernel
     * Esta classe é a principal, reponsavel por cria uma aplicação groute.
     * 
     * @author HIM&ROBOT <him&robot@gmail.com> 
-    * @version 0.1 * @copyright GPL © 2018, HIM&ROBOT ltda. 
-    * @access public * @package groot/main 
+    * @version 0.1 
+    * @access public 
+    * @package groot/main 
+    * @copyright GPL © 2018, HIM&ROBOT ltda. 
     */ 
 
 
