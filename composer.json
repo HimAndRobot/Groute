@@ -12,7 +12,8 @@
     "autoload": {
     	"psr-4": {
     		"core\\":"src/core/",
-  	 		"facades\\":"src/facades/"
+  	 		"facades\\":"src/facades/",
+  	 		"con\\":"controller"
     	}
 	}
 }

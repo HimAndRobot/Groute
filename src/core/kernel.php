@@ -17,12 +17,44 @@ class kernel
 
 
     static private $routes = array();
+    static private $container;
     
     public function run()
     {
         $browserUrl = $this->getBrowserUrl();  
         $requestMethod = strtolower($_SERVER['REQUEST_METHOD']);
         $route = $this->findRouteByUrl($requestMethod, $browserUrl);
+        $params = $this->combinedParams($route, $browserUrl);
+        $this->runClass($route ,$params);
+    }
+    
+    private function runClass(route $route, array $params)
+    {
+        $callable = $route->getCallable();
+        $container = self::$container;
+        if($callable['type'] == 'function') {
+            call_user_func($container[$callable['class']], $params);
+        } else {
+            call_user_func_array([$container[$callable['class']], $callable['method']], [$params]);
+        }
+    }
+    
+    public function loadContainer()
+    {
+        return new container;
+    }
+    
+    public function setContainer($container)
+    {
+        self::$container = $container;
+    }
+    
+    private function combinedParams(route $route, array $browserUrl)
+    {
+        $routeParams = $route->getParams();
+        $browserUrlParams = array_intersect_key($browserUrl, $routeParams);
+        $userParams = array_combine($routeParams, $browserUrlParams);
+        return $userParams;
     }
     
     private function findRouteByUrl(string $routeMethod, array $browserUrl)
@@ -30,7 +62,9 @@ class kernel
         $routes = self::$routes[$routeMethod];
         foreach($routes as $key => $route) {
             if($route->compareRoutes($browserUrl)){
-                echo 'achou';
+                return $route;
+            } else {
+                trigger_error('ERROR 404: O url digitado não existe. Por favor contante o web master.',E_USER_ERROR);
             }
         }
     }
@@ -56,19 +90,27 @@ class kernel
         
     public function __call($name, $arguments)
     {
-        if($name == "get" or $name == "post" or $name == "put" or $name == "delete") {
             $arguments[] = $name;
             call_user_func_array(array($this,'addRoute'),$arguments);
-        } else {
-            trigger_error('O metodo informado ainda não é aceito pelo GROUTE. Por favor acesse nossa documentação para saber os metodos aceitos.',E_USER_WARNING);
-        }
     }
     
-    private function addRoute($bruteRoute, $routeCallable, $type)
+    private function addRoute(string $bruteRoute, string $routeCallable, string $type)
     {
         $tratamentRoute = $this->tratamentBruteRoute($bruteRoute);
-        $route = new route($tratamentRoute['route'], $tratamentRoute['params'], $tratamentRoute['paramsPropeties']);
+        $tratamentCallable = $this->tratamentCallable($routeCallable);
+        $route = new route($tratamentRoute['route'], $tratamentRoute['params'], $tratamentRoute['paramsPropeties'], $tratamentCallable);
         self::$routes[$type][] = $route;
+    }
+    
+    private function tratamentCallable(string $bruteCallable)
+    {
+        if(strPos($bruteCallable, '.') === FALSE) {
+            return ['function', $bruteCallable, ''];
+        } else {
+            $callable = explode('.', $bruteCallable);
+            array_unshift($callable, 'controller');
+            return $callable;          
+        }
     }
     
     private function tratamentBruteRoute(string $bruteRoute)
@@ -94,7 +136,7 @@ class kernel
         foreach($bruteParams as $key => $value) {
             $paramBrute = substr($value,1,-1);
             if(strpos($paramBrute, '[') === FALSE) {
-                $params[$key] = $value;              
+                $params[$key] = $paramBrute;              
             } else {
                 $strInicio = strpos($paramBrute, '[') + 1;
                 $strFim = strpos($paramBrute, ']') - $strInicio;

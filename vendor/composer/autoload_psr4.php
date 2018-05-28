@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'facades\\' => array($baseDir . '/src/facades'),
     'core\\' => array($baseDir . '/src/core'),
+    'con\\' => array($baseDir . '/controller'),
 );

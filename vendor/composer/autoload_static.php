@@ -14,6 +14,7 @@ class ComposerStaticInitec1bc00cfb2fcfdf76544113e7c9a11c
         'c' => 
         array (
             'core\\' => 5,
+            'con\\' => 4,
         ),
     );
 
@@ -25,6 +26,10 @@ class ComposerStaticInitec1bc00cfb2fcfdf76544113e7c9a11c
         'core\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/core',
+        ),
+        'con\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/controller',
         ),
     );
 

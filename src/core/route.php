@@ -10,11 +10,14 @@ class route
     private $group;
     private $middleare;
     
-    public function __construct(array $route, array $params, array $paramsProperties)
+    public function __construct(array $route, array $params, array $paramsProperties, array $callable)
     {
         $this->route = $route;
         $this->params = $params;
         $this->paramsProperties = $paramsProperties;
+        $this->callable['type'] = $callable[0];
+        $this->callable['class'] = $callable[1];
+        $this->callable['method'] = $callable[2];
     }
     
     public function compareRoutes(array $browserUrl)
@@ -28,6 +31,16 @@ class route
                 return TRUE;
             }
         }
+    }
+    
+    public function getCallable()
+    {
+        return $this->callable;
+    }
+    
+    public function getParams()
+    {
+        return $this->params;
     }
     
     private function validateVariable(array $browserUrlParams)
