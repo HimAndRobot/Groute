@@ -1,5 +1,5 @@
 
-<h1>Documetação</h1>
+<h1>Documentação</h1>
 
 <p> Uma rota no Groute é formada pelo conjunto de valores(Meto, Rota, Ação). Como observado abaixo.</p>
 
