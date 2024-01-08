@@ -12,5 +12,8 @@
 <p>Ex: a rota abaixo chama o controller home e a action index se receber uma requisição get
 $route->get('/home/{$gean}/teste','home@index');</p>
 
+
 <p>Ex: já essa outra com a mesma rota chama outro controller se receber a requisição post
 $route->post('/home/{$gean}/teste','homa@registro');</p>
+
+
