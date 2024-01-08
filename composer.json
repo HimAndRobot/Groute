@@ -1,0 +1,19 @@
+{
+    "name": "Groot/main",
+    "discription": "Um framework RESTFULL. O Groot foi feito para construção de sites de pequeno a médio porte.",
+    "authors": [
+        {
+            "name": "Gean Pedro da Silva",
+            "email": "geanpn@gmail.com"
+        }
+    ],
+    "type": "package",
+    "license": "MIT",
+    "autoload": {
+    	"psr-4": {
+    		"core\\":"src/core/",
+  	 		"facades\\":"src/facades/",
+  	 		"con\\":"controller"
+    	}
+	}
+}
