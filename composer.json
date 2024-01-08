@@ -1,5 +1,5 @@
 {
-    "name": groot/main",
+    "name": "groot/main",
     "discription": "Um framework RESTFULL. O Groot foi feito para construção de sites de pequeno a médio porte.",
     "authors": [
         {
